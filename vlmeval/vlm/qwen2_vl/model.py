@@ -183,6 +183,7 @@ class Qwen2VLChat(Qwen2VLPromptMixin, BaseModel):
         system_prompt: str | None = None,
         post_process: bool = False,  # if True, will try to only extract stuff in the last \boxed{}.
         verbose: bool = False,
+        use_vllm: bool = False,
         **kwargs,
     ):
         super().__init__(use_custom_prompt=use_custom_prompt)
@@ -218,7 +219,8 @@ class Qwen2VLChat(Qwen2VLPromptMixin, BaseModel):
         gpu_mems = get_gpu_memory()
         max_gpu_mem = max(gpu_mems) if gpu_mems != [] else -1
         assert max_gpu_mem > 0
-        self.use_vllm = kwargs.get('use_vllm', False)
+        # self.use_vllm = kwargs.get('use_vllm', False)
+        self.use_vllm = use_vllm
         self.limit_mm_per_prompt = 24
         if self.use_vllm:
             from vllm import LLM
@@ -254,18 +256,18 @@ class Qwen2VLChat(Qwen2VLPromptMixin, BaseModel):
             # If only one process and GPU memory is less than 40GB
             if '72b' in self.model_path.lower():
                 self.model = MODEL_CLS.from_pretrained(
-                    model_path, torch_dtype='auto', device_map=split_model(), attn_implementation='flash_attention_2'
+                    model_path, device_map=split_model(), attn_implementation='flash_attention_2', torch_dtype=torch.bfloat16
                 )
                 self.model.eval()
             elif auto_split_flag():
                 assert world_size == 1, 'Only support world_size == 1 when AUTO_SPLIT is set for non-72B Qwen2-VL'
                 # Will Use All GPUs to run one model
                 self.model = MODEL_CLS.from_pretrained(
-                    model_path, torch_dtype='auto', device_map='auto', attn_implementation='flash_attention_2'
+                    model_path, device_map='auto', attn_implementation='flash_attention_2', torch_dtype=torch.bfloat16
                 )
             else:
                 self.model = MODEL_CLS.from_pretrained(
-                    model_path, torch_dtype='auto', device_map='cpu', attn_implementation='flash_attention_2'
+                    model_path, device_map='cpu', attn_implementation='flash_attention_2', torch_dtype=torch.bfloat16
                 )
                 self.model.cuda().eval()
 

@@ -150,7 +150,7 @@ You can launch the evaluation by setting either --data and --model or --config.
     parser.add_argument('--reuse-aux', type=bool, default=True, help='reuse auxiliary evaluation files')
     parser.add_argument(
         '--use-vllm', action='store_true', help='use vllm to generate, the flag is only supported in Llama4 for now')
-
+    parser.add_argument('--use_cot', action='store_true')
     args = parser.parse_args()
     return args
 
@@ -233,6 +233,8 @@ def main():
                     dataset_kwargs = {}
                     if dataset_name in ['MMLongBench_DOC', 'DUDE', 'DUDE_MINI', 'SLIDEVQA', 'SLIDEVQA_MINI']:
                         dataset_kwargs['model'] = model_name
+                    elif dataset_name == 'MMEReasoning':
+                        dataset_kwargs['use_cot'] = args.use_cot
 
                     # If distributed, first build the dataset on the main process for doing preparation works
                     if world_size > 1:

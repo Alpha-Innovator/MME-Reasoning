@@ -3,6 +3,7 @@ import random as rd
 from abc import abstractmethod
 import os.path as osp
 import copy as cp
+import json
 from ..smp import get_logger, parse_file, concat_images_vlmeval, LMUDataRoot, md5, decode_base64_to_image_file
 
 

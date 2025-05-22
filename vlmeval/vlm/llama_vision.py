@@ -87,6 +87,8 @@ class llama_vision(BaseModel):
         self.processor = AutoProcessor.from_pretrained(model_path)
         if 'Instruct' in model_path or 'cot' in model_path or 'CoT' in model_path:
             kwargs_default = dict(do_sample=True, temperature=0.6, top_p=0.9)
+        elif 'o1' in model_path:
+            kwargs_default = dict(do_sample=False, max_new_tokens=2048, top_p=0.9, temperature=0.1, num_beams=1)
         else:
             kwargs_default = dict(do_sample=False, max_new_tokens=2048, temperature=0.0, top_p=None, num_beams=1)
         kwargs.update(kwargs_default)
@@ -190,23 +192,66 @@ class llama_vision(BaseModel):
         return message
 
     def generate_inner(self, message, dataset=None):
-        prompt, image_path = self.message_to_promptimg(message, dataset=dataset)
+        if 'o1' in self.model_name:
+            def infer(messages: dict) -> str:
+                input_text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
+                inputs = self.processor(image, input_text, return_tensors='pt').to(self.model.device)
+                output = self.model.generate(**inputs, **self.kwargs)
+                return self.processor.decode(output[0][inputs['input_ids'].shape[1]:]).replace('<|eot_id|>', '').replace("<|end_of_text|>", "")
+            def tmp(inp, out):
+                return [
+                    {
+                        'role': 'assistant',
+                        'content': [
+                            {'type': 'text', 'text': inp}
+                        ]
+                    },
+                    {
+                        'role': 'user',
+                        'content': [
+                            {'type': 'text', 'text': out}
+                        ]
+                    }
+                ]
+            prompt, image_path = self.message_to_promptimg(message, dataset=dataset)
+            prompt += "\nSummarize how you will approach the problem and explain the steps you will take to reach the answer."
+            image = Image.open(image_path)
+            messages = [
+                {'role': 'user', 'content': [
+                    {'type': 'image'},
+                    {'type': 'text', 'text': prompt}
+                ]}
+            ]
+            out = infer(messages)
+            caption_prompt = "Provide a detailed description of the image, particularly emphasizing the aspects related to the question."
+            messages.extend(tmp(out, caption_prompt))
+            out = infer(messages)
+            reasoning_prompt = "Provide a chain-of-thought, logical explanation of the problem. This should outline step-by-step reasoning."
+            messages.extend(tmp(out, reasoning_prompt))
+            reasoning = infer(messages)
+            conclusion_prompt = "State the final answer in a clear and direct format. It must match the correct answer exactly."
+            messages.extend(tmp(reasoning, conclusion_prompt))
+            out = infer(messages)
+            return out, messages
 
-        image = Image.open(image_path)
-        messages = [
-            {'role': 'user', 'content': [
-                {'type': 'image'},
-                {'type': 'text', 'text': prompt}
-            ]}
-        ]
-        input_text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
-        inputs = self.processor(image, input_text, return_tensors='pt').to(self.device)
-        if not self.use_custom_prompt(dataset):
-            if dataset is not None and DATASET_TYPE(dataset) in ['MCQ', 'Y/N']:
-                self.kwargs['max_new_tokens'] = 128
-            else:
-                self.kwargs['max_new_tokens'] = 512
-        if "cot" in self.model_name or "CoT" in self.model_name:
-            self.kwargs['max_new_tokens'] = 2048
-        output = self.model.generate(**inputs, **self.kwargs)
-        return self.processor.decode(output[0][inputs['input_ids'].shape[1]:]).replace('<|eot_id|>', '')
+        else:
+            prompt, image_path = self.message_to_promptimg(message, dataset=dataset)
+
+            image = Image.open(image_path)
+            messages = [
+                {'role': 'user', 'content': [
+                    {'type': 'image'},
+                    {'type': 'text', 'text': prompt}
+                ]}
+            ]
+            input_text = self.processor.apply_chat_template(messages, add_generation_prompt=True)
+            inputs = self.processor(image, input_text, return_tensors='pt').to(self.device)
+            if not self.use_custom_prompt(dataset):
+                if dataset is not None and DATASET_TYPE(dataset) in ['MCQ', 'Y/N']:
+                    self.kwargs['max_new_tokens'] = 128
+                else:
+                    self.kwargs['max_new_tokens'] = 512
+            if "cot" in self.model_name or "CoT" in self.model_name:
+                self.kwargs['max_new_tokens'] = 2048
+            output = self.model.generate(**inputs, **self.kwargs)
+            return self.processor.decode(output[0][inputs['input_ids'].shape[1]:]).replace('<|eot_id|>', '')

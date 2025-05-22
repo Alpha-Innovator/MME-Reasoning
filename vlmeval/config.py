@@ -166,7 +166,7 @@ api_models = {
         img_size=-1,
         img_detail="high",
         retry=10,
-        verbose=False,
+        verbose=True,
     ),
     "ChatGPT4o": partial(
         GPT4V,
@@ -415,7 +415,10 @@ api_models = {
     ),
     # doubao_vl
     "DoubaoVL": partial(
-        DoubaoVL, model="Doubao-1.5-vision-pro", temperature=0, retry=10, verbose=False
+        DoubaoVL, model="doubao-1.5-vision-pro-250328", temperature=0, retry=10, verbose=True
+    ),
+    "DoubaoVL-thinking": partial(
+        DoubaoVL, model="doubao-1-5-thinking-vision-pro-250428", temperature=0, retry=10, verbose=True
     ),
     # Shopee MUG-U
     'MUG-U-7B': partial(
@@ -461,6 +464,14 @@ api_models = {
         api_base="https://api.moonshot.cn/v1/chat/completions",
         temperature=0,
         retry=10,
+    ),
+    "Kimi-k1.5": partial(
+        GPT4V,
+        model="kimi-latest",
+        api_base="https://api.moonshot.cn/v1/chat/completions",
+        temperature=0,
+        retry=10,
+        verbose=True
     ),
 }
 
@@ -1136,6 +1147,105 @@ qwen2vl_series = {
     ),
 }
 
+r1_like_series = {
+    "R1-Onevision-7B-RL": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/Fancy-MLLM/R1-Onevision-7B-RL-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "MM-Eureka-Qwen-7B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/FanqingM/MM-Eureka-Qwen-7B-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "MM-Eureka-Qwen-32B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/FanqingM/MM-Eureka-Qwen-32B-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "R1-VL-7B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/jingyiZ00/R1-VL-7B',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "LMMS-LAB-GRPO-2B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/lmms-lab/Qwen2-VL-2B-GRPO-8k',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "Vision-R1-7B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/Osilly/Vision-R1-7B-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "VL-Rethinker-7B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/TIGER-Lab/VL-Rethinker-7B-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "VL-Rethinker-72B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/TIGER-Lab/VL-Rethinker-72B-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "VisualThinker-R1-Zero": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/turningpoint-ai/VisualThinker-R1-Zero',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "LMM-R1-MGT-PerceReason": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/VLM-Reasoner/LMM-R1-MGT-PerceReason-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "OpenVLThinker-7B": partial(
+        Qwen2VLChat,
+        model_path='/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/ydeng9/OpenVLThinker-7B-2_5',
+        min_pixels=1280*28*28,
+        max_pixels=16384*28*28,
+        use_custom_prompt=False,
+        max_new_tokens=1024
+    ),
+    "Virgo-72B": partial(
+        Qwen2VLChat,
+        model_path="/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/RUC-AIBOX/Virgo-72B",
+        min_pixels=1280 * 28 * 28,
+        max_pixels=16384 * 28 * 28,
+        use_vllm=True,
+        max_new_tokens=8192
+    )
+}
+
 slime_series = {
     "Slime-7B": partial(SliME, model_path="yifanzhang114/SliME-vicuna-7B"),
     "Slime-8B": partial(SliME, model_path="yifanzhang114/SliME-Llama3-8B"),
@@ -1160,6 +1270,11 @@ moondream_series = {
 llama_series = {
     "Llama-3.2-11B-Vision-Instruct": partial(
         llama_vision, model_path="meta-llama/Llama-3.2-11B-Vision-Instruct"
+    ),
+    "LlamaV-o1": partial(
+        llama_vision, model_path="/fs-computility/MA4Tool/shared/MA4Tool/hug_ckpts/reasoning_models/omkarthawakar/LlamaV-o1",
+        top_p=0.9,
+        max_new_tokens=2048,
     ),
     "LLaVA-CoT": partial(llama_vision, model_path="Xkev/Llama-3.2V-11B-cot"),
     "Llama-3.2-90B-Vision-Instruct": partial(
@@ -1262,7 +1377,7 @@ model_groups = [
     kosmos_series, points_series, nvlm_series, vintern_series, h2ovl_series,
     aria_series, smolvlm_series, sail_series, valley_series, vita_series,
     ross_series, emu_series, ola_series, ursa_series, gemma_series,
-    long_vita_series, ristretto_series, kimi_series
+    long_vita_series, ristretto_series, kimi_series, r1_like_series
 ]
 
 for grp in model_groups:
