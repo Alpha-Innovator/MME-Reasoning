@@ -12,7 +12,7 @@ Official repository for "[MME-Reasoning: A Comprehensive Benchmark for Logical R
 
 🌟 For more details, please refer to the project page.
 
-[[🚀Project Page](https://alpha-innovator.github.io/mmereasoning.github.io/)] [[📖 Paper]()] [[📊 Huggingface Dataset]()] [[🏆 Leaderboard](https://alpha-innovator.github.io/mmereasoning.github.io/#leaderboard)]
+[[🚀Project Page](https://alpha-innovator.github.io/mmereasoning.github.io/)] [[📖 Paper]()] [[📊 Huggingface Dataset](https://huggingface.co/datasets/U4R/MME-Reasoning)] [[🏆 Leaderboard](https://alpha-innovator.github.io/mmereasoning.github.io/#leaderboard)]
 
 ## 💥 News
 - **[2025.05.23]** 🔥 We launch MME-Reasoning, a comprehensive benchmark designed to evaluate the reasoning ability of MLLMs. We release the [arxiv paper]() and all data samples in [huggingface dataset]().
