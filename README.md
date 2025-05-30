@@ -65,5 +65,10 @@ To contribute your model to the leaderboard, please email the prediction files t
 If you find **MME-Reasoning** useful for your research and applications, please kindly cite using this BibTeX:
 
 ```latex
-
+@article{yuan2025mme,
+  title={MME-Reasoning: A Comprehensive Benchmark for Logical Reasoning in MLLMs},
+  author={Yuan, Jiakang and Peng, Tianshuo and Jiang, Yilei and Lu, Yiting and Zhang, Renrui and Feng, Kaituo and Fu, Chaoyou and Chen, Tao and Bai, Lei and Zhang, Bo and others},
+  journal={arXiv preprint arXiv:2505.21327},
+  year={2025}
+}
 ```
