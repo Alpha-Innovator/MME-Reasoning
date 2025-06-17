@@ -15,7 +15,8 @@ Official repository for "[MME-Reasoning: A Comprehensive Benchmark for Logical R
 [[🚀Project Page](https://alpha-innovator.github.io/mmereasoning.github.io/)] [[📖 Paper](https://arxiv.org/pdf/2505.21327)] [[📊 Huggingface Dataset](https://huggingface.co/datasets/U4R/MME-Reasoning)] [[🏆 Leaderboard](https://alpha-innovator.github.io/mmereasoning.github.io/#leaderboard)]
 
 ## 💥 News
-- **[2025.05.23]** 🔥 We launch MME-Reasoning, a comprehensive benchmark designed to evaluate the reasoning ability of MLLMs. We release the [arxiv paper]() and all data samples in [huggingface dataset]().
+- **[2025.06.17]** 🔥 We have integrated MME-Reasoning in [VLMEvalkit](https://github.com/open-compass/VLMEvalKit).
+- **[2025.05.23]** 🔥 We launch MME-Reasoning, a comprehensive benchmark designed to evaluate the reasoning ability of MLLMs. We release the [arxiv paper](https://arxiv.org/pdf/2505.21327) and all data samples in [huggingface dataset](https://huggingface.co/datasets/U4R/MME-Reasoning).
 
 ## 👀 About MME-Reasoning
 
@@ -33,6 +34,16 @@ Experiments were conducted on state-of-the-art MLLMs, covering Chat and Thinking
     <img src="assets/performance.png" width="95%"> <br>
 </p>
 
+## Inference using [VLMEvalkit](https://github.com/open-compass/VLMEvalKit)
+
+Please first install VLMEvalKit following the official github [repo](https://github.com/open-compass/VLMEvalKit).
+
+Then, run:
+
+```shell
+python run.py --data MME-Reasonig --model TESTED_MODEL --verbose
+```
+    
 ## Inference
 
 We are working to integrate the MME-Reasoning into existing VLMs evaluation frameworks. For the current version of the evaluation, please following the follows steps:
